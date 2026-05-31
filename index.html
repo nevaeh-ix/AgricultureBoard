@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nevaeh's Homestead Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header>
+    <h1> 🌸 My Agriculture Board</h1>
+    <p>Keeping track of all the crops I planted and when I planted them.</p>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>🌱 Add Something Planted</h2>
+
+      <form id="cropForm">
+        <label>
+          Crop Name
+          <input type="text" id="cropName" placeholder="Example: Tomatoes" required />
+        </label>
+
+        <label>
+          Plant Date
+          <input type="date" id="plantDate" required />
+        </label>
+
+        <label>
+          Expected Harvest Date
+          <input type="date" id="harvestDate" required />
+        </label>
+
+        <label>
+          Harvest Yield (lbs)
+          <input type="number" id="yieldAmount" placeholder="Example: 12" required />
+        </label>
+
+        <button type="submit">Save My Crop</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>☀️ Weather & Growing Conditions</h2>
+      <div id="alerts">
+        <p>No alerts right now.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>🌾 Everything I've Logged</h2>
+      <div id="cropList"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Created by Nevaeh George | Agri-Tech Sprint 01</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
