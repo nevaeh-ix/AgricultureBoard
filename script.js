@@ -37,7 +37,7 @@ function renderCrops() {
 }
 
 // This is a simple fake weather alert for now.
-// Later, this could connect to a real weather API.
+// Later, this can connect to a real weather API.
 function renderAlerts() {
   alerts.innerHTML = "";
 
