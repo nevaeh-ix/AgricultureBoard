@@ -2,17 +2,16 @@ const cropForm = document.getElementById("cropForm");
 const cropList = document.getElementById("cropList");
 const alerts = document.getElementById("alerts");
 
-// This holds all of my crop records.
-// If I already saved some before, it pulls them back from localStorage.
-let crops = JSON.parse(localStorage.getItem("crops")) || [];
+// Gets my crop records from the server instead of localStorage
+async function getCrops() {
+  const response = await fetch("/api/crops");
+  const crops = await response.json();
 
-// Saves everything so my data does not disappear when I refresh the page.
-function saveCrops() {
-  localStorage.setItem("crops", JSON.stringify(crops));
+  renderCrops(crops);
 }
 
-// Shows all of my saved crops on the page.
-function renderCrops() {
+// Shows all of my saved crops on the page
+function renderCrops(crops) {
   cropList.innerHTML = "";
 
   if (crops.length === 0) {
@@ -36,8 +35,8 @@ function renderCrops() {
   });
 }
 
-// This is a simple fake weather alert for now.
-// Later, this can connect to a real weather API.
+// This is a simple fake weather alert for now
+// Later, this can connect to a real weather API
 function renderAlerts() {
   alerts.innerHTML = "";
 
@@ -53,21 +52,23 @@ function renderAlerts() {
   } else {
     alerts.innerHTML = `
       <div class="alert-warning">
-        ☀️  Dry alert! It's a pretty hot day outside, let me make sure I water all my plants.
+        ☀️ Dry alert! It's a pretty hot day outside, let me make sure I water all my plants.
       </div>
     `;
   }
 }
 
-// Removes a crop when I click the delete button.
-function deleteCrop(index) {
-  crops.splice(index, 1);
-  saveCrops();
-  renderCrops();
+// Removes a crop when I click the delete button
+async function deleteCrop(index) {
+  await fetch("/api/crops/" + index, {
+    method: "DELETE"
+  });
+
+  getCrops();
 }
 
-// When I submit the form, this grabs the values and adds them to my list.
-cropForm.addEventListener("submit", function (event) {
+// When I submit the form, this grabs the values and sends them to the server
+cropForm.addEventListener("submit", async function (event) {
   event.preventDefault();
 
   const crop = {
@@ -77,12 +78,18 @@ cropForm.addEventListener("submit", function (event) {
     yield: document.getElementById("yieldAmount").value
   };
 
-  crops.push(crop);
-  saveCrops();
-  renderCrops();
+  await fetch("/api/crops", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(crop)
+  });
+
   cropForm.reset();
+  getCrops();
 });
 
-// Runs when the page first opens.
-renderCrops();
+// Runs when the page first opens
+getCrops();
 renderAlerts();
