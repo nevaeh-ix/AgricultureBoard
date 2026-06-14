@@ -1,0 +1,25 @@
+{
+  "name": "agri-tech-homestead-manager",
+  "version": "1.0.0",
+  "description": "This is the repo for my agriculture project in Comp 322.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nevaeh-ix/AgricultureBoard.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/nevaeh-ix/AgricultureBoard/issues"
+  },
+  "homepage": "https://github.com/nevaeh-ix/AgricultureBoard#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
