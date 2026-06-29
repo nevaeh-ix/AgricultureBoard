@@ -20,6 +20,15 @@
   },
   "homepage": "https://github.com/nevaeh-ix/AgricultureBoard#readme",
   "dependencies": {
-    "express": "^5.2.1"
+    "@prisma/client": "^6.19.3",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "prisma": "^6.19.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.1"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   }
 }

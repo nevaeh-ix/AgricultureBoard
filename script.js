@@ -2,7 +2,7 @@ const cropForm = document.getElementById("cropForm");
 const cropList = document.getElementById("cropList");
 const alerts = document.getElementById("alerts");
 
-// Gets my crop records from the server instead of localStorage
+// Gets my crop records from the database through the server
 async function getCrops() {
   const response = await fetch("/api/crops");
   const crops = await response.json();
@@ -19,7 +19,7 @@ function renderCrops(crops) {
     return;
   }
 
-  crops.forEach(function (crop, index) {
+  crops.forEach(function (crop) {
     const cropItem = document.createElement("article");
     cropItem.className = "crop-item";
 
@@ -28,7 +28,7 @@ function renderCrops(crops) {
       <p><strong>Plant Date:</strong> ${crop.plantDate}</p>
       <p><strong>Expected Harvest:</strong> ${crop.harvestDate}</p>
       <p><strong>Yield:</strong> ${crop.yield} lbs</p>
-      <button onclick="deleteCrop(${index})">Delete Crop</button>
+      <button onclick="deleteCrop(${crop.id})">Delete Crop</button>
     `;
 
     cropList.appendChild(cropItem);
@@ -59,8 +59,8 @@ function renderAlerts() {
 }
 
 // Removes a crop when I click the delete button
-async function deleteCrop(index) {
-  await fetch("/api/crops/" + index, {
+async function deleteCrop(id) {
+  await fetch("/api/crops/" + id, {
     method: "DELETE"
   });
 
