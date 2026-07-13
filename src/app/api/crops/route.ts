@@ -2,15 +2,20 @@ import { prisma } from "../../../lib/prisma";
 import { NextResponse } from "next/server";
 
 
+
 // Gets all crops from the database
 export async function GET() {
 
+
   try {
+
 
     const crops = await prisma.crop.findMany({
 
       orderBy: {
+
         id: "asc"
+
       }
 
     });
@@ -19,7 +24,10 @@ export async function GET() {
     return NextResponse.json(crops);
 
 
-  } catch (error) {
+  } catch(error) {
+
+
+    console.log(error);
 
 
     return NextResponse.json({
@@ -32,7 +40,9 @@ export async function GET() {
 
     });
 
+
   }
+
 
 }
 
@@ -41,9 +51,12 @@ export async function GET() {
 // Adds a new crop to the database
 export async function POST(req: Request) {
 
+
   try {
 
+
     const crop = await req.json();
+
 
 
     // Checks if crop information is missing
@@ -56,9 +69,10 @@ export async function POST(req: Request) {
 
       }, {
 
-        status: 400
+        status:400
 
       });
+
 
     }
 
@@ -69,8 +83,11 @@ export async function POST(req: Request) {
       data: {
 
         name: crop.name,
+
         plantDate: crop.plantDate,
+
         harvestDate: crop.harvestDate,
+
         yield: crop.yield
 
       }
@@ -81,30 +98,36 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
 
-      message: "Crop added successfully",
-      crop: newCrop
+      message:"Crop added successfully",
+
+      crop:newCrop
 
     }, {
 
-      status: 201
+      status:201
 
     });
 
 
-  } catch (error) {
+
+  } catch(error) {
+
+
+    console.log(error);
 
 
     return NextResponse.json({
 
-      message: "Could not add crop"
+      message:"Could not add crop"
 
     }, {
 
-      status: 500
+      status:500
 
     });
 
 
   }
+
 
 }

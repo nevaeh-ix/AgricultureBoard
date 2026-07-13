@@ -17,7 +17,7 @@ export default function CropForm() {
 
 
 
-  // Sends crop information to the database
+  // Adds a crop to my database
   async function addCrop() {
 
 
@@ -34,13 +34,13 @@ export default function CropForm() {
 
       body: JSON.stringify({
 
-        name: name,
+        name:name,
 
-        plantDate: plantDate,
+        plantDate:plantDate,
 
-        harvestDate: harvestDate,
+        harvestDate:harvestDate,
 
-        yield: yieldAmount
+        yield:yieldAmount
 
       })
 
@@ -58,7 +58,7 @@ export default function CropForm() {
 
   return (
 
-    <div>
+    <div className="card">
 
 
       <h2>
@@ -136,7 +136,6 @@ export default function CropForm() {
         Add Crop
 
       </button>
-
 
 
     </div>

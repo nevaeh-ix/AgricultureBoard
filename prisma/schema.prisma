@@ -21,4 +21,6 @@ model Crop {
 
   yield String
 
+  createdAt DateTime @default(now())
+
 }

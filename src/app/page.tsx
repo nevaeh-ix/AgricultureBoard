@@ -1,5 +1,6 @@
-import CropList from "../items/CropList";
 import CropForm from "../items/CropForm";
+import CropList from "../items/CropList";
+import Sidebar from "../items/Sidebar";
 
 
 // Shows the main page of my application
@@ -7,16 +8,12 @@ export default function Home() {
 
   return (
 
-    <main>
+    <div className="container">
+
 
       <h1>
         Agri-Tech Homestead Manager
       </h1>
-
-
-      <p>
-        Manage crops and track farm information.
-      </p>
 
 
       <CropForm />
@@ -25,7 +22,7 @@ export default function Home() {
       <CropList />
 
 
-    </main>
+    </div>
 
   );
 

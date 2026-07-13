@@ -3,71 +3,150 @@
 import { useEffect, useState } from "react";
 
 
-// Stores the information for each crop
 type Crop = {
-  id: number;
-  name: string;
-  plantDate: string;
-  harvestDate: string;
-  yield: string;
+
+  id:number;
+
+  name:string;
+
+  plantDate:string;
+
+  harvestDate:string;
+
+  yield:string;
+
 };
+
 
 
 // Displays all crops from the database
 export default function CropList() {
 
-  const [crops, setCrops] = useState<Crop[]>([]);
+
+  const [crops,setCrops] = useState<Crop[]>([]);
+
 
 
   // Gets crops when the page loads
-  useEffect(() => {
-
-    async function getCrops() {
-
-      const response = await fetch("/api/crops");
-
-      const data = await response.json();
-
-      // Makes sure I only save crop data when the API returns a list
-      if (Array.isArray(data)) {
-
-        setCrops(data);
-
-      }
-
-    }
+  useEffect(function(){
 
 
     getCrops();
 
-  }, []);
+
+  },[]);
+
+
+
+  // Gets all crops from my API
+  async function getCrops(){
+
+
+    const response = await fetch("/api/crops");
+
+
+    const data = await response.json();
+
+
+    if(Array.isArray(data)){
+
+      setCrops(data);
+
+    }
+
+
+  }
+
+
+
+  // Deletes a crop from the database
+  async function deleteCrop(id:number){
+
+
+    await fetch(`/api/crops/${id}`, {
+
+      method:"DELETE"
+
+    });
+
+
+
+    // Updates the list after deleting
+    getCrops();
+
+
+  }
 
 
 
   return (
+
     <div>
 
-      <h2>Crops</h2>
+
+      <h2>
+        Crops
+      </h2>
 
 
-      {crops.map((crop) => (
 
-        <div key={crop.id}>
+      <div className="grid">
 
-          <p>Name: {crop.name}</p>
 
-          <p>Plant Date: {crop.plantDate}</p>
+      {crops.map(function(crop){
 
-          <p>Harvest Date: {crop.harvestDate}</p>
 
-          <p>Yield: {crop.yield}</p>
+        return (
 
-        </div>
+          <div className="card" key={crop.id}>
 
-      ))}
+
+            <h3>
+              {crop.name}
+            </h3>
+
+
+            <p>
+              Plant Date: {crop.plantDate}
+            </p>
+
+
+            <p>
+              Harvest Date: {crop.harvestDate}
+            </p>
+
+
+            <p>
+              Yield: {crop.yield}
+            </p>
+
+
+
+            <button onClick={function(){
+
+              deleteCrop(crop.id);
+
+            }}>
+
+              Delete
+
+            </button>
+
+
+          </div>
+
+        );
+
+
+      })}
+
+
+      </div>
 
 
     </div>
+
   );
+
 
 }
