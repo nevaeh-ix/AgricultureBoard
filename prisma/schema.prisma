@@ -2,16 +2,23 @@ generator client {
   provider = "prisma-client-js"
 }
 
+
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
+
+// Stores my crop information
 model Crop {
-  id          Int      @id @default(autoincrement())
-  name        String
-  plantDate   String
+
+  id Int @id @default(autoincrement())
+
+  name String
+
+  plantDate String
+
   harvestDate String
-  yield       String
-  createdAt   DateTime @default(now())
+
+  yield String
+
 }

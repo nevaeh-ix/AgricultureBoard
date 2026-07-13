@@ -1,34 +1,29 @@
 {
-  "name": "agri-tech-homestead-manager",
-  "version": "1.0.0",
-  "description": "This is the repo for my agriculture project in Comp 322.",
-  "main": "script.js",
+  "name": "temp-next",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nevaeh-ix/AgricultureBoard.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/nevaeh-ix/AgricultureBoard/issues"
-  },
-  "homepage": "https://github.com/nevaeh-ix/AgricultureBoard#readme",
   "dependencies": {
-    "@prisma/client": "^6.19.3",
+    "@prisma/client": "^7.8.0",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "prisma": "^6.19.3"
+    "next": "16.2.10",
+    "prisma": "^7.8.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
-    "@types/node": "^26.0.1"
-  },
-  "prisma": {
-    "seed": "node prisma/seed.js"
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.10",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }

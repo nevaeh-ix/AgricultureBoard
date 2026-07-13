@@ -1,0 +1,104 @@
+/* [project]/src/app/global.css [app-client] (css) */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: #333;
+  background: #fff5f8;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  color: #fff;
+  text-align: center;
+  background: linear-gradient(90deg, #ff69b4, #ffb6c1);
+  padding: 2rem;
+}
+
+header h1 {
+  margin-bottom: .5rem;
+}
+
+main {
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  display: flex;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  flex: 300px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px #ff69b433;
+}
+
+.card h2 {
+  color: #ff1493;
+}
+
+form {
+  flex-direction: column;
+  gap: 1rem;
+  display: flex;
+}
+
+label {
+  flex-direction: column;
+  font-weight: bold;
+  display: flex;
+}
+
+input {
+  border: 1px solid pink;
+  border-radius: 8px;
+  margin-top: .3rem;
+  padding: .7rem;
+}
+
+button {
+  color: #fff;
+  cursor: pointer;
+  background: #ff69b4;
+  border: none;
+  border-radius: 8px;
+  padding: .8rem;
+}
+
+button:hover {
+  background: #ff1493;
+}
+
+.crop-item {
+  background: #fff0f5;
+  border-left: 5px solid #ff69b4;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+.alert-warning {
+  background: #ffe4ec;
+  border-left: 5px solid #ff1493;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+footer {
+  text-align: center;
+  color: #333;
+  background: pink;
+  margin-top: 1rem;
+  padding: 1rem;
+}
+
+@media (max-width: 700px) {
+  main {
+    flex-direction: column;
+  }
+}
+
+/*# sourceMappingURL=src_app_global_17da5oy.css.map*/
