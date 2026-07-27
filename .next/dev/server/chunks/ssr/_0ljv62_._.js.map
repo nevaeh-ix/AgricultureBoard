@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/Nevau/Downloads/Agri-Tech-Homestead-Manager/src/app/error.tsx"],"sourcesContent":["\"use client\";\r\n\r\n\r\n// Shows if something goes wrong\r\nexport default function Error({\r\n\r\n  error,\r\n  reset,\r\n\r\n}:{\r\n\r\n  error: Error;\r\n\r\n  reset: () => void;\r\n\r\n}){\r\n\r\n  return(\r\n\r\n    <main>\r\n\r\n      <h1>\r\n        Something went wrong.\r\n      </h1>\r\n\r\n      <p>\r\n        {error.message}\r\n      </p>\r\n\r\n      <button onClick={reset}>\r\n\r\n        Try Again\r\n\r\n      </button>\r\n\r\n    </main>\r\n\r\n  );\r\n\r\n}"],"names":["Error","error","reset","message","onClick"],"mappings":";;;;;AAAA;;AAIe,SAASA,MAAM,EAE5BC,KAAK,EACLC,KAAK,EAQN;IAEC,qBAEE,8OAAC;;0BAEC,8OAAC;0BAAG;;;;;;0BAIJ,8OAAC;0BACED,MAAME,OAAO;;;;;;0BAGhB,8OAAC;gBAAOC,SAASF;0BAAO;;;;;;;;;;;;AAU9B"}},
+    {"offset": {"line": 47, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/Nevau/Downloads/Agri-Tech-Homestead-Manager/node_modules/next/src/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.ts"],"sourcesContent":["module.exports = (\n  require('../../module.compiled') as typeof import('../../module.compiled')\n).vendored['react-ssr']!.ReactJsxDevRuntime\n"],"names":["module","exports","require","vendored","ReactJsxDevRuntime"],"mappings":"AAAAA,OAAOC,OAAO,GACZC,QAAQ,4HACRC,QAAQ,CAAC,YAAY,CAAEC,kBAAkB","ignoreList":[0]}}]
+}
