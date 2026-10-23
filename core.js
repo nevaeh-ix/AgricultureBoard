@@ -54,7 +54,7 @@
     const windows = plantingWindows(crop, Number(planted?.slice(0, 4)), calendar, spring, fall, method);
     if (!parseDate(planted)) return { tone: "neutral", title: "Choose a planting date", text: "See how it fits your planting calendar." };
     if (!windows.length) return { tone: "neutral", title: "Add your local frost dates", text: "Enter a last spring frost and first fall frost in the planting year to calculate a general window." };
-    if (!windows.some(([a, b]) => planted >= a && planted <= b)) return { tone: "caution", title: "Outside the suggested planting window", text: "You can still save this planting. Consider local conditions or a protected growing space." };
+    // Outside-window dates are allowed without showing a warning.
     const forecastDay = weather?.daily.time.indexOf(planted) ?? -1;
     if (forecastDay >= 0) {
       const d = weather.daily;
