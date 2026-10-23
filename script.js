@@ -31,6 +31,61 @@ function writeJSON(key, data) {
 
 let crops = [], settings = {}, editing = null, weather = null, weatherVersion = 0, locationIntent = 0;
 let storageProtected = false;
+const apiBase = (localStorage.getItem("agricultureApiUrl") || "").trim().replace(/\\/$/, "");
+let remoteReady = false;
+let remoteGarden = null;
+try {
+  remoteGarden = localStorage.getItem("agricultureGardenId");
+  if (!remoteGarden) {
+    remoteGarden = crypto.randomUUID();
+    localStorage.setItem("agricultureGardenId", remoteGarden);
+  }
+} catch { remoteGarden = null; }
+async function apiRequest(path, options = {}) {
+  const response = await fetch(apiBase + path, {
+    ...options, headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+    signal: AbortSignal.timeout(10000)
+  });
+  if (!response.ok) throw new Error("Backend request failed (" + response.status + ")");
+  return response.status === 204 ? null : response.json();
+}
+function syncCrops() {
+  if (!remoteReady) return;
+  // Serialize snapshots to avoid overlapping saves overwriting newer changes.
+  pendingSave = pendingSave.then(async () => {
+    await apiRequest("/api/gardens/" + remoteGarden + "/crops", {
+      method: "PUT", body: JSON.stringify(crops.map(c => ({
+        ...c, yield: c.yield === "" || c.yield == null ? null : Number(c.yield)
+      })))
+    });
+    $("storageStatus").textContent = "Saved in PostgreSQL and this browser.";
+  }).catch(() => {
+    remoteReady = false;
+    $("storageStatus").textContent = "Backend unavailable. Your changes are saved in this browser.";
+  });
+}
+let pendingSave = Promise.resolve();
+async function connectBackend() {
+  if (!apiBase || !remoteGarden || storageProtected) return;
+  try {
+    const remote = await apiRequest("/api/gardens/" + remoteGarden + "/crops");
+    if (crops.length && !remote.length) {
+      remoteReady = true;
+      syncCrops();
+    } else if (remote.length) {
+      crops = remote;
+      persistCrops();
+      renderCrops();
+      remoteReady = true;
+      $("storageStatus").textContent = "Loaded from PostgreSQL. Changes sync to the backend.";
+    } else {
+      remoteReady = true;
+      $("storageStatus").textContent = "Connected to PostgreSQL. Your garden is empty.";
+    }
+  } catch {
+    $("storageStatus").textContent = "Backend unavailable. Your crops are still saved in this browser.";
+  }
+}
 try {
   const saved = readJSON("crops", []);
   if (!Array.isArray(saved)) throw new Error("Invalid saved records");
@@ -45,7 +100,7 @@ const defaultLocation = { name: "Greensboro, North Carolina", latitude: 36.0726,
 let gardenLocation = settings.location;
 if (!gardenLocation || typeof gardenLocation.name !== "string" || !Number.isFinite(gardenLocation.latitude) || !Number.isFinite(gardenLocation.longitude) || Math.abs(gardenLocation.latitude) > 90 || Math.abs(gardenLocation.longitude) > 180) gardenLocation = defaultLocation;
 
-function persistCrops() { if (!storageProtected) writeJSON("crops", crops); }
+function persistCrops() { if (!storageProtected) writeJSON("crops", crops); syncCrops(); }
 function saveSettings() {
   settings = { location: gardenLocation, calendar: $("calendarRegion").value, spring: $("lastFrost").value, fall: $("firstFrost").value };
   writeJSON("gardenSettings", settings);
@@ -315,7 +370,16 @@ async function loadWeather() {
     timezone: "auto", forecast_days: "7"
   });
   try {
-    const raw = await getJSON("https://api.open-meteo.com/v1/forecast?" + params);
+    let raw;
+    if (apiBase) {
+      try {
+        raw = await apiRequest("/api/weather?" + new URLSearchParams({
+          latitude: requestedLocation.latitude, longitude: requestedLocation.longitude
+        }));
+      } catch {
+        raw = await getJSON("https://api.open-meteo.com/v1/forecast?" + params);
+      }
+    } else raw = await getJSON("https://api.open-meteo.com/v1/forecast?" + params);
     if (request !== weatherVersion) return;
     weather = G.normalizeWeather(raw);
     if (typeof weather.timezone === "string") { gardenLocation.timezone = weather.timezone; saveSettings(); }
@@ -390,6 +454,7 @@ $("refreshWeather").addEventListener("click", loadWeather);
 syncMethods();
 refreshPlanner();
 renderCrops();
+connectBackend();
 loadWeather();
 // Expired forecasts never continue to drive planting advice.
 setInterval(() => {
