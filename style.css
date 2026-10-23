@@ -131,3 +131,48 @@ footer p{margin:0}
 .weather-now{align-items:flex-start;gap:12px}.weather-now>div{flex-wrap:wrap;gap:5px 13px}.weather-now>div>div{flex-basis:100%}.temperature{font-size:34px}.weather-detail{min-width:95px;padding-top:8px}.weather-icon{display:none}.forecast-day{padding:11px 1px}.forecast-day .small{font-size:11px}.forecast-icon{font-size:20px}.forecast-day .rain{font-size:10px}
 .source-note{padding:18px 4px;gap:12px}footer{flex-wrap:wrap;justify-content:space-between;gap:10px 20px}.empty-garden{padding:30px 24px}.form-row{gap:10px}input,select,textarea{font-size:16px}
 }
+
+/* Reflow date fields and keep forecasts readable on phones. */
+.workspace > *, .form-row > *, .weather-now > div, .crop-identity, .inline > * { min-width: 0; }
+input, select, textarea { max-width: 100%; }
+@media (max-width: 700px) {
+  .wrap { width: auto; margin-left: max(14px, env(safe-area-inset-left)); margin-right: max(14px, env(safe-area-inset-right)); }
+  .nav { flex-wrap: wrap; padding-top: max(10px, env(safe-area-inset-top)); padding-bottom: 10px; gap: 4px 16px; }
+  .nav a { min-height: 44px; display: inline-flex; align-items: center; }
+  .card, .planner-card { padding: 18px; }
+  .section-top { flex-wrap: wrap; }
+  .section-top h2 { font-size: 21px; }
+  .quiet, .text-button, .crop-actions button, .delete-prompt button { min-height: 44px; }
+  .crop-actions button, .delete-prompt button { min-width: 44px; font-size: 13px; }
+  .calendar-settings summary { min-height: 44px; padding-block: 10px; }
+  .weather-now { flex-wrap: wrap; }
+  .weather-now h3 { overflow-wrap: anywhere; }
+  .forecast { display: flex; overflow-x: auto; scroll-snap-type: x proximity; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+  .forecast-day { flex: 0 0 80px; scroll-snap-align: start; padding: 12px 8px; }
+  .forecast-day .small { font-size: 12px; }
+  .forecast-day .rain { font-size: 11px; }
+  .forecast-hint { display: block; margin: 8px 0 0; font-size: 12px; }
+  .crop-item .section-top { align-items: flex-start; }
+  .crop-identity { flex: 1 1 160px; }
+  .badge { font-size: 11px; }
+  .crop-bottom { flex-wrap: wrap; }
+  .crop-actions { gap: 8px; }
+  .source-note { align-items: flex-start; }
+  footer { padding-bottom: max(25px, env(safe-area-inset-bottom)); }
+  footer a { min-height: 44px; display: inline-flex; align-items: center; }
+}
+@media (max-width: 480px) {
+  .form-row { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .inline { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .inline button { width: 100%; white-space: normal; }
+  .weather-now { align-items: stretch; flex-direction: column; gap: 12px; }
+  .weather-detail { text-align: left; padding-top: 0; }
+  .crop-bottom { align-items: flex-start; flex-direction: column; }
+}
+.forecast-hint { display: none; }
+@media (max-width: 700px) { .forecast-hint { display: block; } }
+@media (pointer: coarse) {
+  input, select, textarea { font-size: 16px; }
+  button, .button { min-height: 44px; }
+}
+
