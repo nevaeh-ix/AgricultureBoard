@@ -1,5 +1,5 @@
 
-:root{--ink:#332b2b;--muted:#74676b;--rose:#963856;--rose-dark:#782c46;--pink:#f8e8ec;--line:#e8dce0;--green:#426d51;--paper:#fcf8f5}
+:root{--ink:#25352b;--muted:#627169;--rose:#356747;--rose-dark:#254b34;--pink:#e8f0e6;--line:#d9e4d7;--green:#356747;--paper:#f7f8f2}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{scroll-behavior:smooth;scroll-padding-top:25px}
@@ -9,10 +9,10 @@ button,input,select,textarea{font:inherit}
 button,.button{cursor:pointer;min-height:44px;border:0;border-radius:9px;background:var(--rose);color:white;padding:11px 19px;font-size:14px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:20px}
 button:hover,.button:hover{background:var(--rose-dark)}
 button:disabled{cursor:wait;opacity:.55}
-:focus-visible{outline:3px solid #447c90;outline-offset:3px}
-input,select,textarea{width:100%;min-width:0;background:#fffdfc;color:var(--ink);border:1px solid #d6c8ce;border-radius:8px;padding:11px 12px;min-height:45px}
+:focus-visible{outline:3px solid #437e62;outline-offset:3px}
+input,select,textarea{width:100%;min-width:0;background:#ffffff;color:var(--ink);border:1px solid #cbd9cd;border-radius:8px;padding:11px 12px;min-height:45px}
 textarea{resize:vertical}
-input::placeholder,textarea::placeholder{color:#8c7b82}
+input::placeholder,textarea::placeholder{color:#7a8980}
 label{display:block;font-size:13px;font-weight:600;margin:15px 0 6px}
 .optional{font-weight:400;color:var(--muted)}
 p{margin:0 0 12px}
@@ -35,7 +35,7 @@ h3{font-size:17px;font-weight:600}
 .quiet{background:transparent;color:var(--rose);padding:7px 10px;min-height:38px}
 .quiet:hover{background:var(--pink)}
 .secondary{background:var(--pink);color:var(--rose)}
-.secondary:hover{background:#efd6df}
+.secondary:hover{background:#d6e5d1}
 .location-form{margin:20px 0 12px}
 .location-form label{font-weight:400;color:var(--muted);margin:0 0 6px;font-size:12px}
 .inline{display:flex;gap:8px;align-items:stretch;max-width:720px}
@@ -43,7 +43,7 @@ h3{font-size:17px;font-weight:600}
 .inline button{white-space:nowrap}
 .location-results{display:flex;flex-wrap:wrap;gap:8px}
 .location-result{background:var(--pink);color:var(--rose);font-size:12px;text-align:left}
-.location-result:hover{background:#f0d8e0}
+.location-result:hover{background:#d7e7d4}
 .weather-card{margin-bottom:34px}
 .weather-card h2{font-size:26px}
 .muted{color:var(--muted)}
@@ -58,7 +58,7 @@ h3{font-size:17px;font-weight:600}
 .weather-detail{white-space:pre-line;text-align:right;color:var(--muted);font-size:12px!important}
 .forecast{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .forecast-day{display:flex;flex-direction:column;text-align:center;align-items:center;padding:13px 5px;border-right:1px solid var(--line);line-height:1.45}
-.forecast-day:first-child{background:#fcf3f5}
+.forecast-day:first-child{background:#edf4e9}
 .forecast-day:last-child{border-right:0}
 .forecast-icon{font-size:23px;margin:5px 0}
 .forecast-day strong{font-size:15px}
@@ -72,7 +72,7 @@ h3{font-size:17px;font-weight:600}
 .planner-card{padding:28px}
 .planner-card h2{margin-bottom:23px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.crop-guide{padding:14px 16px;margin-top:18px;background:#fcf4f6;border-radius:9px;font-size:12px;line-height:1.6}
+.crop-guide{padding:14px 16px;margin-top:18px;background:#edf4e9;border-radius:9px;font-size:12px;line-height:1.6}
 .crop-guide strong{font-size:13px}
 .crop-guide p{margin:5px 0 0}
 .text-button{min-height:32px;background:transparent;color:var(--rose);padding:8px 0 0;text-align:left;font-size:12px;text-decoration:underline}
@@ -80,11 +80,11 @@ h3{font-size:17px;font-weight:600}
 .calendar-settings{font-size:12px;margin:16px 0}
 .calendar-settings summary{color:var(--rose);cursor:pointer;min-height:30px;padding:5px 0}
 .calendar-settings p{margin-top:8px}
-.advice{font-size:12px;padding:14px 16px;border-radius:9px;border:1px solid #dae5d9;background:#f1f6ef;margin:18px 0 0}
+.advice{font-size:12px;padding:14px 16px;border-radius:9px;border:1px solid #d3e3d0;background:#eff6e9;margin:18px 0 0}
 .advice strong{font-size:12px}
 .advice p{margin:5px 0 0}
 .advice.caution{background:#fff7e9;border-color:#ecdbbb}
-.advice.neutral{background:#f7f4f3;border-color:var(--line)}
+.advice.neutral{background:#f4f7ef;border-color:var(--line)}
 #harvestHint{margin:8px 0}
 .form-status{font-size:12px;color:var(--green);margin:12px 0}
 .full{width:100%}
@@ -101,16 +101,16 @@ h3{font-size:17px;font-weight:600}
 .crop-icon{font-size:26px}
 .crop-item h3{font-size:16px}
 .badge{font-size:10px;border-radius:20px;background:var(--pink);color:var(--rose);padding:5px 10px;white-space:nowrap}
-.badge.growing{background:#edf3e9;color:var(--green)}
+.badge.growing{background:#e4f0dc;color:var(--green)}
 .crop-dates{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:21px 0 13px}
 .crop-dates .eyebrow{display:block;font-size:10px;letter-spacing:.7px;margin-bottom:4px;color:var(--muted)}
 .crop-dates strong{font-size:13px;font-weight:500}
-progress{display:block;width:100%;height:5px;margin:0 0 8px;border:0;border-radius:5px;overflow:hidden;appearance:none;background:#f0e7e7}
-progress::-webkit-progress-bar{background:#f0e7e7}
-progress::-webkit-progress-value{background:#8b9f77}
-progress::-moz-progress-bar{background:#8b9f77}
+progress{display:block;width:100%;height:5px;margin:0 0 8px;border:0;border-radius:5px;overflow:hidden;appearance:none;background:#dfebdc}
+progress::-webkit-progress-bar{background:#dfebdc}
+progress::-webkit-progress-value{background:#5b8762}
+progress::-moz-progress-bar{background:#5b8762}
 .crop-notes{font-size:12px;padding-top:10px;white-space:pre-wrap}
-.crop-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #f0e8eb;padding-top:9px;margin-top:15px}
+.crop-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #d9e4d7;padding-top:9px;margin-top:15px}
 .crop-actions{display:flex;gap:2px}
 .crop-actions button{font-size:11px}
 .delete-prompt{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:12px;margin-top:10px}
