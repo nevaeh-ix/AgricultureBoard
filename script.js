@@ -31,7 +31,7 @@ function writeJSON(key, data) {
 
 let crops = [], settings = {}, editing = null, weather = null, weatherVersion = 0, locationIntent = 0;
 let storageProtected = false;
-const apiBase = (localStorage.getItem("agricultureApiUrl") || "").trim().replace(/\\/$/, "");
+const apiBase = (localStorage.getItem("agricultureApiUrl") || "").trim().replace(/\/$/, "");
 let remoteReady = false;
 let remoteGarden = null;
 try {
