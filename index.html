@@ -1,64 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nevaeh's Homestead Tracker</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9b3555">
+  <meta name="description" content="Plan your garden with live local weather, crop planting guidance, and a harvest tracker.">
+  <title>AgricultureBoard · Nevaeh's garden planner</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="core.js"></script>
+  <script defer src="script.js"></script>
 </head>
-
 <body>
-  <header>
-    <h1> 🌸 My Agriculture Board</h1>
-    <p>Keeping track of all the crops I planted and when I planted them.</p>
+  <a class="skip" href="#main">Skip to garden planner</a>
+  <nav class="nav wrap" aria-label="Main navigation"><a class="brand" href="#">✿ AgricultureBoard</a><a href="#garden">My garden <span aria-hidden="true">↗</span></a></nav>
+  <header class="hero wrap">
+    <div><p class="eyebrow">A LITTLE CARE GOES A LONG WAY</p><h1>Good things<br>take <em>growing.</em></h1><p class="intro">Your crops, your local weather, and a little help knowing when to plant. Let's grow something good.</p><a class="button" href="#planner">Plan a planting <span aria-hidden="true">↗</span></a></div>
+    <div class="hero-art" aria-hidden="true"><div class="sun"></div><div class="stem stem-one"><i></i><i></i><i></i><i></i></div><div class="stem stem-two"><i></i><i></i><i></i><i></i></div><div class="pot"></div><span class="art-caption">a little more green, every day.</span></div>
   </header>
-
-  <main>
-    <section class="card">
-      <h2>🌱 Add Something Planted</h2>
-
-      <form id="cropForm">
-        <label>
-          Crop Name
-          <input type="text" id="cropName" placeholder="Example: Tomatoes" required />
-        </label>
-
-        <label>
-          Plant Date
-          <input type="date" id="plantDate" required />
-        </label>
-
-        <label>
-          Expected Harvest Date
-          <input type="date" id="harvestDate" required />
-        </label>
-
-        <label>
-          Harvest Yield (lbs)
-          <input type="number" id="yieldAmount" placeholder="Example: 12" required />
-        </label>
-
-        <button type="submit">Save My Crop</button>
-      </form>
+  <main id="main" class="wrap">
+    <section class="card weather-card" aria-labelledby="weather-heading">
+      <div class="section-top"><div><p class="eyebrow">KNOW BEFORE YOU GROW</p><h2 id="weather-heading">Weather in your garden</h2></div><button id="refreshWeather" class="quiet" type="button">↻ Refresh</button></div>
+      <form id="locationForm" class="location-form"><label for="locationSearch">Find a city or postal code</label><div class="inline"><input id="locationSearch" type="search" placeholder="e.g. Greensboro, NC" minlength="2" maxlength="100" required><button id="searchButton" type="submit">Search</button><button id="useLocation" class="secondary" type="button">Use my location</button></div></form>
+      <div id="locationResults" class="location-results"></div>
+      <p id="weatherStatus" class="muted" role="status" aria-live="polite">Loading weather for Greensboro, North Carolina…</p>
+      <div id="weatherContent" hidden><div class="weather-now"><div><span id="weatherIcon" class="weather-icon" aria-hidden="true"></span><strong id="temperature" class="temperature"></strong><div><h3 id="weatherLocation"></h3><p id="weatherDescription" class="muted"></p></div></div><p id="weatherDetail" class="weather-detail"></p></div><div id="forecast" class="forecast" aria-label="Seven-day forecast"></div></div>
+      <div id="alerts" class="advisories" aria-live="polite"></div>
+      <p class="source">Forecast data: <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a>. Garden advisories are simple forecast-based tips, not official weather warnings.</p>
     </section>
-
-    <section class="card">
-      <h2>☀️ Weather & Growing Conditions</h2>
-      <div id="alerts">
-        <p>No alerts right now.</p>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>🌾 Everything I've Logged</h2>
-      <div id="cropList"></div>
-    </section>
+    <div class="workspace">
+      <section id="planner" class="card planner-card" aria-labelledby="planner-heading">
+        <p class="eyebrow">START SOMETHING GOOD</p><h2 id="planner-heading">Plan your next planting</h2>
+        <form id="cropForm">
+          <label for="cropPreset">What are you growing?</label><select id="cropPreset"></select>
+          <div id="customFields" hidden><label for="cropName">Crop name</label><input id="cropName" maxlength="80" placeholder="e.g. Purple basil"><label for="customDays">Days to harvest <span class="optional">(optional)</span></label><input id="customDays" type="number" min="1" max="1095" step="1" placeholder="Check your seed packet"></div>
+          <div class="form-row"><div><label for="plantDate">Planting date</label><input id="plantDate" type="date" required></div><div><label for="plantMethod">Starting with</label><select id="plantMethod"></select></div></div>
+          <div id="cropGuide" class="crop-guide"></div>
+          <details class="calendar-settings"><summary>Planting calendar &amp; frost dates</summary><label for="calendarRegion">Calendar for your garden</label><select id="calendarRegion"><option value="nc">Central North Carolina</option><option value="custom">Use my local frost dates</option></select><p id="regionNote" class="muted small">Central NC guidance is intended for the Piedmont, including Greensboro. Other regions need local frost dates.</p><div id="frostFields" hidden><div class="form-row"><div><label for="lastFrost">Last spring frost</label><input id="lastFrost" type="date"></div><div><label for="firstFrost">First fall frost</label><input id="firstFrost" type="date"></div></div><p class="muted small">Use estimated frost dates for the planting year from your local Extension service. These produce general planning windows, not a local crop calendar.</p></div></details>
+          <div id="plantingAdvice" class="advice" role="status" aria-live="polite"></div>
+          <div class="form-row"><div><label for="harvestDate">Expected harvest date</label><input id="harvestDate" type="date" required></div><div><label for="yieldAmount">Yield in lb <span class="optional">(optional)</span></label><input id="yieldAmount" type="number" min="0" max="1000000" step="0.01" placeholder="Add after harvest"></div></div>
+          <p id="harvestHint" class="muted small"></p>
+          <label for="cropNotes">Notes <span class="optional">(optional)</span></label><textarea id="cropNotes" rows="2" maxlength="500" placeholder="Variety, garden bed, or something to remember…"></textarea>
+          <p id="formStatus" class="form-status" role="status"></p><button id="saveCrop" class="full" type="submit">＋ Add to my garden</button><button id="cancelEdit" class="quiet" type="button" hidden>Cancel editing</button>
+        </form>
+      </section>
+      <section id="garden" class="garden-section" aria-labelledby="garden-heading"><div class="section-top"><div><p class="eyebrow">A LITTLE PROGRESS, EVERY DAY</p><h2 id="garden-heading">My garden <span id="cropCount" class="count">0</span></h2></div></div><p id="storageStatus" class="muted small" role="status">Your garden is saved in this browser.</p><div id="cropList" class="crop-list"></div></section>
+    </div>
+    <aside class="source-note"><span aria-hidden="true">🌱</span><p>Planting windows and harvest ranges are adapted from <a href="https://content.ces.ncsu.edu/central-north-carolina-planting-calendar-for-annual-vegetables-fruits-and-herbs" target="_blank" rel="noopener noreferrer">NC State Extension</a>. Dates are estimates: variety, soil temperature, frost, and growing conditions all matter. Check your seed packet or plant label.</p></aside>
   </main>
-
-  <footer>
-    <p>Created by Nevaeh George | Agri-Tech Sprint 01</p>
-  </footer>
-
-  <script src="script.js"></script>
+  <footer class="wrap"><a class="brand" href="#">✿ AgricultureBoard</a><p>Grown with care by Nevaeh George.</p><a href="https://github.com/nevaeh-ix/AgricultureBoard" target="_blank" rel="noopener noreferrer">View the code ↗</a></footer>
 </body>
 </html>
