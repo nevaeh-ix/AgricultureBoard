@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: agriculture
+      POSTGRES_USER: agriculture
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-dev-only}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agriculture -d agriculture"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  api:
+    build: ./backend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8001:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg://agriculture:${POSTGRES_PASSWORD:-local-dev-only}@db:5432/agriculture
+      CORS_ORIGINS: http://localhost:8000,http://127.0.0.1:8000,https://nevaeh-ix.github.io
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  pgdata:
