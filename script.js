@@ -149,8 +149,8 @@ function refreshPlanner(updateEstimate = true) {
   $("harvestDate").setCustomValidity("");
   const crop = chosenCrop(), planting = $("plantDate").value, method = $("plantMethod").value;
   const estimate = getEstimate();
-  if (updateEstimate) $("harvestDate").value = estimate?.suggested || "";
-  $("harvestHint").textContent = estimate ? "Estimated harvest: " + dateRange(estimate.early, estimate.late) + ". You can adjust the date. Changing the crop, method, or planting date recalculates it." : "Set your own harvest date, or enter days to harvest from your seed packet.";
+  if (updateEstimate) $("harvestDate").value = estimate?.suggested || $("plantDate").value;
+  
   $("cropGuide").replaceChildren();
   $("plantingAdvice").replaceChildren();
   if (!crop) {
@@ -201,7 +201,7 @@ function editCrop(index) {
   $("yieldAmount").value = record.yield ?? "";
   $("cropNotes").value = record.notes || "";
   refreshPlanner(false);
-  $("harvestDate").value = G.parseDate(record.harvestDate) ? record.harvestDate : "";
+  $("harvestDate").value = G.parseDate(record.harvestDate) ? record.harvestDate : $("plantDate").value;
   $("planner-heading").textContent = "Edit your planting";
   $("saveCrop").textContent = "Save changes";
   $("cancelEdit").hidden = false;
@@ -229,22 +229,10 @@ function renderCrops() {
     top.append(identity, el("span", status, "badge" + (status === "Growing" ? " growing" : "")));
     card.append(top);
     const dates = el("div", undefined, "crop-dates");
-    const planted = el("div"), harvest = el("div");
+    const planted = el("div");
     planted.append(el("span", "PLANTED", "eyebrow"), el("strong", formatDate(crop.plantDate, true)));
-    harvest.append(el("span", "EXPECTED HARVEST", "eyebrow"), el("strong", formatDate(crop.harvestDate, true)));
-    dates.append(planted, harvest);
+    dates.append(planted);
     card.append(dates);
-    if (G.parseDate(crop.plantDate) && G.parseDate(crop.harvestDate)) {
-      const total = G.daysBetween(crop.plantDate, crop.harvestDate);
-      const elapsed = G.daysBetween(crop.plantDate, today);
-      const progress = el("progress");
-      progress.max = 100;
-      progress.value = total > 0 ? Math.max(0, Math.min(100, elapsed / total * 100)) : 0;
-      progress.setAttribute("aria-label", "Time elapsed until expected harvest for " + crop.name);
-      card.append(progress);
-      const left = G.daysBetween(today, crop.harvestDate);
-      card.append(el("p", crop.plantDate > today ? "Planting in " + G.daysBetween(today, crop.plantDate) + " days" : left > 0 ? left + " days until the planned harvest date" : "The planned harvest date has arrived. Check your crop for ripeness.", "muted small"));
-    }
     if (crop.notes) card.append(el("p", String(crop.notes), "crop-notes"));
     const bottom = el("div", undefined, "crop-bottom"), actions = el("div", undefined, "crop-actions");
     bottom.append(el("span", crop.yield !== "" && crop.yield != null ? String(crop.yield) + " lb recorded" : "Yield not recorded", "small muted"));
