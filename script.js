@@ -173,8 +173,11 @@ function refreshPlanner(updateEstimate = true) {
     }
   }
   const advice = G.recommendation(crop, method, planting, $("calendarRegion").value, $("lastFrost").value, $("firstFrost").value, usableWeather());
-  $("plantingAdvice").className = "advice " + advice.tone;
-  $("plantingAdvice").append(el("strong", advice.title), el("p", advice.text));
+  $("plantingAdvice").hidden = advice.title === "Outside the suggested planting window";
+  if (!$("plantingAdvice").hidden) {
+    $("plantingAdvice").className = "advice " + advice.tone;
+    $("plantingAdvice").append(el("strong", advice.title), el("p", advice.text));
+  }
 }
 function resetPlanner() {
   editing = null;
