@@ -36,8 +36,8 @@
           <div id="cropGuide" class="crop-guide"></div>
           <details class="calendar-settings"><summary>Planting calendar &amp; frost dates</summary><label for="calendarRegion">Calendar for your garden</label><select id="calendarRegion"><option value="nc">Central North Carolina</option><option value="custom">Use my local frost dates</option></select><p id="regionNote" class="muted small">Central NC guidance is intended for the Piedmont, including Greensboro. Other regions need local frost dates.</p><div id="frostFields" hidden><div class="form-row"><div><label for="lastFrost">Last spring frost</label><input id="lastFrost" type="date"></div><div><label for="firstFrost">First fall frost</label><input id="firstFrost" type="date"></div></div><p class="muted small">Use estimated frost dates for the planting year from your local Extension service. These produce general planning windows, not a local crop calendar.</p></div></details>
           <div id="plantingAdvice" class="advice" role="status" aria-live="polite"></div>
-          <div class="form-row"><div><label for="harvestDate">Expected harvest date</label><input id="harvestDate" type="date" required></div><div><label for="yieldAmount">Yield in lb <span class="optional">(optional)</span></label><input id="yieldAmount" type="number" min="0" max="1000000" step="0.01" placeholder="Add after harvest"></div></div>
-          <p id="harvestHint" class="muted small"></p>
+          <div class="form-row"><input id="harvestDate" type="hidden"><div><label for="yieldAmount">Yield in lb <span class="optional">(optional)</span></label><input id="yieldAmount" type="number" min="0" max="1000000" step="0.01" placeholder="Add after harvest"></div></div>
+          
           <label for="cropNotes">Notes <span class="optional">(optional)</span></label><textarea id="cropNotes" rows="2" maxlength="500" placeholder="Variety, garden bed, or something to remember…"></textarea>
           <p id="formStatus" class="form-status" role="status"></p><button id="saveCrop" class="full" type="submit">Save crop</button><button id="cancelEdit" class="quiet" type="button" hidden>Cancel editing</button>
         </form>
