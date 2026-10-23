@@ -4,6 +4,8 @@
   "use strict";
   const CROPS = [
     { id: "tomato", name: "Tomatoes", icon: "🍅", season: "warm", methods: { transplant: [75, 85] }, windows: [["04-15", "07-14"], ["08-01", "08-14"]] },
+    { id: "corn", name: "Corn (sweet)", icon: "🌽", season: "warm", methods: { seed: [85, 90] }, windows: [["03-15", "05-31"]] },
+    { id: "potato", name: "Potatoes", icon: "🥔", season: "cool", methods: { tuber: [95, 120] }, windows: [["02-15", "03-31"]] },
     { id: "cucumber", name: "Cucumbers", icon: "🥒", season: "warm", methods: { seed: [56, 65], transplant: [28, 37] }, windows: [["04-15", "08-14"]] },
     { id: "squash", name: "Summer squash", icon: "🌼", season: "warm", methods: { seed: [50, 60], transplant: [30, 40] }, windows: [["04-01", "08-14"]] },
     { id: "beans", name: "Bush snap beans", icon: "🫘", season: "warm", methods: { seed: [50, 55] }, windows: [["03-15", "09-30"]] },

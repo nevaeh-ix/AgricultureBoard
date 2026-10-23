@@ -1,10 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap');
 
 :root{--ink:#332b2b;--muted:#74676b;--rose:#963856;--rose-dark:#782c46;--pink:#f8e8ec;--line:#e8dce0;--green:#426d51;--paper:#fcf8f5}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{scroll-behavior:smooth;scroll-padding-top:25px}
-body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.6 "DM Sans",system-ui,sans-serif}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
 a{color:var(--rose);text-underline-offset:3px}
 button,input,select,textarea{font:inherit}
 button,.button{cursor:pointer;min-height:44px;border:0;border-radius:9px;background:var(--rose);color:white;padding:11px 19px;font-size:14px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:20px}
@@ -18,30 +17,19 @@ label{display:block;font-size:13px;font-weight:600;margin:15px 0 6px}
 .optional{font-weight:400;color:var(--muted)}
 p{margin:0 0 12px}
 h1,h2,h3{margin:0;line-height:1.22}
-h1,h2{font-family:"Playfair Display",Georgia,serif;font-weight:500}
-h1{font-size:clamp(45px,5.6vw,72px);letter-spacing:-2px;line-height:1.08}
+h1,h2{font-family:inherit;font-weight:600}
+h1{font-size:30px;letter-spacing:-.7px;line-height:1.2}
 h1 em{font-weight:500;color:var(--rose)}
-h2{font-size:28px;letter-spacing:-.7px}
+h2{font-size:21px;letter-spacing:-.3px}
 h3{font-size:17px;font-weight:600}
 .wrap{max-width:1200px;width:calc(100% - 88px);margin:auto}
-.nav{min-height:90px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
-.nav>a{text-decoration:none;font-size:13px}
-.nav .brand,.brand{font-family:"Playfair Display",Georgia,serif;font-size:23px;letter-spacing:-.5px;color:var(--rose);text-decoration:none}
-.hero{display:grid;grid-template-columns:1.15fr 1fr;align-items:center;padding:48px 25px 52px;gap:50px}
-.eyebrow{font-size:10px;letter-spacing:2px;font-weight:700;color:var(--rose);margin:0 0 13px}
-.intro{color:var(--muted);font-size:15px;max-width:390px;margin:21px 0 24px}
-.hero-art{height:310px;position:relative;overflow:hidden;border-radius:48% 48% 8px 8px;background:#f4e0de;background-image:radial-gradient(#dcbfba 1px,transparent 1px);background-size:16px 16px}
-.sun{position:absolute;width:105px;height:105px;border-radius:50%;background:#e9bd83;top:29px;right:44px;opacity:.7}
-.pot{position:absolute;bottom:35px;left:calc(50% - 57px);height:91px;width:114px;background:#bd6f72;clip-path:polygon(0 0,100% 0,85% 100%,15% 100%);border-top:12px solid #a45660}
-.stem{position:absolute;bottom:115px;left:50%;width:5px;background:#52694f;border-radius:5px;transform-origin:bottom}
-.stem-one{height:140px;transform:rotate(-15deg)}
-.stem-two{height:120px;transform:rotate(22deg)}
-.stem i{position:absolute;background:#667e5a;width:50px;height:26px;border-radius:90% 0 90% 0;top:25px;left:0;transform:rotate(-35deg);transform-origin:left bottom}
-.stem i:nth-child(2){top:58px}
-.stem i:nth-child(3){left:-49px;top:7px;transform:rotate(45deg);border-radius:0 90% 0 90%;transform-origin:right bottom;background:#84936f}
-.stem i:nth-child(4){left:-49px;top:76px;transform:rotate(40deg);border-radius:0 90% 0 90%;transform-origin:right bottom}
-.art-caption{font-family:"Playfair Display",Georgia,serif;font-style:italic;position:absolute;bottom:9px;text-align:center;width:100%;font-size:14px;color:#785b5c}
-.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px}
+.nav{min-height:68px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+.nav a{text-decoration:none;font-size:13px}.nav>div{display:flex;gap:24px}
+.nav .brand,.brand{font-family:inherit;font-size:20px;font-weight:650;letter-spacing:-.3px;color:var(--rose);text-decoration:none}
+.hero{display:flex;justify-content:space-between;align-items:center;padding:30px 0;gap:20px}
+.eyebrow{font-size:11px;letter-spacing:1px;font-weight:700;color:var(--rose);margin:0 0 13px}
+.intro{color:var(--muted);font-size:14px;margin:8px 0 0}
+.card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:28px}
 .section-top{display:flex;justify-content:space-between;align-items:center;gap:15px}
 .section-top .eyebrow{margin-bottom:7px}
 .quiet{background:transparent;color:var(--rose);padding:7px 10px;min-height:38px}
@@ -79,7 +67,7 @@ h3{font-size:17px;font-weight:600}
 .weather-advice{padding:12px 15px;background:#fff6e9;border-left:3px solid #c88f45;border-radius:6px;flex:1 1 300px;font-size:12px}
 .weather-advice p{margin:4px 0 0}
 .calm-note{font-size:12px;color:var(--green);margin:0}
-.source{font-size:10px;color:var(--muted);margin:10px 0 0}
+.source{font-size:11px;color:var(--muted);margin:10px 0 0}
 .workspace{display:grid;grid-template-columns:1fr 1.13fr;gap:34px;align-items:start}
 .planner-card{padding:28px}
 .planner-card h2{margin-bottom:23px}
@@ -101,21 +89,21 @@ h3{font-size:17px;font-weight:600}
 .form-status{font-size:12px;color:var(--green);margin:12px 0}
 .full{width:100%}
 .garden-section{padding:6px 0}
-.count{font:12px "DM Sans",sans-serif;vertical-align:middle;border:1px solid var(--line);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;min-width:27px;height:27px;margin-left:6px}
+.count{font:12px system-ui,sans-serif;vertical-align:middle;border:1px solid var(--line);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;min-width:27px;height:27px;margin-left:6px}
 #storageStatus{margin-top:11px}
 .crop-list{display:flex;flex-direction:column;gap:15px;margin-top:22px}
-.empty-garden{text-align:center;padding:64px 33px;background:#f8efed;border:1px dashed #d6c1c8;border-radius:16px}
-.empty-icon{font-size:50px;display:block;margin-bottom:19px}
-.empty-garden h3{font:24px "Playfair Display",Georgia,serif;margin-bottom:13px}
+.empty-garden{text-align:center;padding:35px 25px;background:#fff;border:1px solid var(--line);border-radius:8px}
+.empty-icon{font-size:27px;display:block;margin-bottom:10px}
+.empty-garden h3{font-size:17px;font-weight:600;margin-bottom:8px}
 .empty-garden p{color:var(--muted);font-size:13px;max-width:300px;margin:0 auto 10px}
-.crop-item{background:#fff;border:1px solid var(--line);border-radius:13px;padding:22px;overflow-wrap:anywhere}
+.crop-item{background:#fff;border:1px solid var(--line);border-radius:8px;padding:22px;overflow-wrap:anywhere}
 .crop-identity{display:flex;align-items:center;gap:10px}
 .crop-icon{font-size:26px}
 .crop-item h3{font-size:16px}
 .badge{font-size:10px;border-radius:20px;background:var(--pink);color:var(--rose);padding:5px 10px;white-space:nowrap}
 .badge.growing{background:#edf3e9;color:var(--green)}
 .crop-dates{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:21px 0 13px}
-.crop-dates .eyebrow{display:block;font-size:8px;letter-spacing:1.2px;margin-bottom:4px;color:var(--muted)}
+.crop-dates .eyebrow{display:block;font-size:10px;letter-spacing:.7px;margin-bottom:4px;color:var(--muted)}
 .crop-dates strong{font-size:13px;font-weight:500}
 progress{display:block;width:100%;height:5px;margin:0 0 8px;border:0;border-radius:5px;overflow:hidden;appearance:none;background:#f0e7e7}
 progress::-webkit-progress-bar{background:#f0e7e7}
@@ -135,6 +123,11 @@ footer .brand{font-size:19px}
 footer p{margin:0}
 .skip{position:absolute;left:10px;top:-70px;z-index:9;background:white;padding:10px}
 .skip:focus{top:10px}
-@media(max-width:900px){.wrap{width:calc(100% - 44px)}.workspace{gap:22px;grid-template-columns:1fr 1fr}.card,.planner-card{padding:22px}.hero{gap:30px;padding:35px 10px}.hero-art{height:290px}.weather-icon{display:none}.weather-now>div{gap:15px}.weather-now h3{max-width:230px}.crop-item{padding:17px}.badge{font-size:9px;padding:4px 7px}}
-@media(max-width:700px){.wrap{width:calc(100% - 32px)}.nav{min-height:74px}.nav .brand{font-size:21px}.hero{grid-template-columns:1fr;padding:35px 4px;gap:30px}.hero-art{height:230px;max-width:400px;width:100%;justify-self:center}.stem-one{height:120px}.stem-two{height:100px}.sun{height:80px;width:80px;top:15px}.pot{bottom:26px;height:70px}.stem{bottom:89px}.intro{max-width:400px}.hero h1 br{display:none}.hero h1{font-size:48px;max-width:360px}.workspace{grid-template-columns:1fr;gap:30px}.weather-card{margin-bottom:25px}.weather-card h2{font-size:23px}.weather-card .section-top{align-items:flex-start}.inline{flex-wrap:wrap}.inline input{flex-basis:calc(100% - 100px)}.inline .secondary{flex-basis:100%}.weather-now{align-items:flex-start;gap:12px}.weather-now>div{flex-wrap:wrap;gap:5px 13px}.weather-now>div>div{flex-basis:100%}.temperature{font-size:37px}.weather-detail{min-width:95px;padding-top:8px}.forecast-day{padding:11px 1px}.forecast-day .small{font-size:10px}.forecast-icon{font-size:20px}.forecast-day .rain{font-size:9px}.source-note{padding:18px 4px;gap:12px}footer{flex-wrap:wrap;justify-content:flex-start;gap:10px 20px}footer .brand{width:100%}.empty-garden{padding:40px 24px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media(max-width:900px){.wrap{width:calc(100% - 40px)}.workspace{gap:22px;grid-template-columns:1fr 1fr}.card,.planner-card{padding:22px}.crop-item{padding:17px}.badge{font-size:11px;padding:4px 7px}}
+@media(max-width:700px){
+.wrap{width:calc(100% - 28px)}.nav .brand{font-size:18px}.nav>div{gap:14px}.hero{align-items:flex-start;flex-direction:column;padding:24px 0;gap:15px}.hero h1{font-size:28px}.intro{max-width:400px}.hero .button{min-height:40px}
+.workspace{grid-template-columns:1fr;gap:28px}.weather-card{margin-bottom:25px}.weather-card h2{font-size:21px}.weather-card .section-top{align-items:center}.inline{flex-wrap:wrap}.inline input{flex-basis:calc(100% - 100px)}.inline .secondary{flex-basis:100%}
+.weather-now{align-items:flex-start;gap:12px}.weather-now>div{flex-wrap:wrap;gap:5px 13px}.weather-now>div>div{flex-basis:100%}.temperature{font-size:34px}.weather-detail{min-width:95px;padding-top:8px}.weather-icon{display:none}.forecast-day{padding:11px 1px}.forecast-day .small{font-size:11px}.forecast-icon{font-size:20px}.forecast-day .rain{font-size:10px}
+.source-note{padding:18px 4px;gap:12px}footer{flex-wrap:wrap;justify-content:space-between;gap:10px 20px}.empty-garden{padding:30px 24px}.form-row{gap:10px}input,select,textarea{font-size:16px}
+}

@@ -15,7 +15,7 @@ Open http://localhost:8000. No build step or API key is required for this noncom
 ## Plan a planting
 
 - Search for a city or postal code and select a matching location. Greensboro, NC is the initial location. The optional location button requests browser permission only when clicked.
-- Select one of 10 crops or enter a custom crop. Where supported, switch between seeds and transplants to update the harvest range.
+- Select one of 12 crops, including tomatoes, sweet corn, and potatoes, or enter a custom crop. Where supported, switch between seeds and transplants to update the harvest range. Potatoes use seed tubers.
 - Choose a planting date to see a calendar recommendation and estimated harvest range. The harvest date remains editable; changing the crop, method, or planting date recalculates it.
 - Save, edit, or remove plantings. Existing records under the original localStorage key, crops, are retained. Storage is specific to this browser and origin; it does not sync across devices.
 
@@ -33,10 +33,11 @@ Only the selected city's coordinates or your requested device location are sent 
 
 ## Checks
 
-Requires Node.js 18 or newer:
+Requires Node.js 22 or newer. Development dependencies are only needed for tests; the website still runs without installing packages.
 
 ~~~sh
-node --test core.test.js
+npm ci
+npm test
 ~~~
 
-Tests cover harvest calculations, seed/transplant differences, calendar boundaries, frost-date validation, forecast scope, missing API values, and weather thresholds.
+Tests cover harvest calculations, seeds/transplants/tubers, calendar boundaries, frost dates, forecast scope, missing API values, and weather thresholds. Browser DOM checks load the actual classic script tags and exercise startup, crop controls, city selection, current location, denied permissions, and weather failures.

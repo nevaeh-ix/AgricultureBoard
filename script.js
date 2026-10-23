@@ -1,3 +1,4 @@
+(function () {
 "use strict";
 
 const $ = id => document.getElementById(id);
@@ -41,12 +42,12 @@ try {
 }
 try { settings = readJSON("gardenSettings", {}) || {}; } catch { settings = {}; }
 const defaultLocation = { name: "Greensboro, North Carolina", latitude: 36.0726, longitude: -79.792, timezone: "America/New_York" };
-let location = settings.location;
-if (!location || typeof location.name !== "string" || !Number.isFinite(location.latitude) || !Number.isFinite(location.longitude) || Math.abs(location.latitude) > 90 || Math.abs(location.longitude) > 180) location = defaultLocation;
+let gardenLocation = settings.location;
+if (!gardenLocation || typeof gardenLocation.name !== "string" || !Number.isFinite(gardenLocation.latitude) || !Number.isFinite(gardenLocation.longitude) || Math.abs(gardenLocation.latitude) > 90 || Math.abs(gardenLocation.longitude) > 180) gardenLocation = defaultLocation;
 
 function persistCrops() { if (!storageProtected) writeJSON("crops", crops); }
 function saveSettings() {
-  settings = { location, calendar: $("calendarRegion").value, spring: $("lastFrost").value, fall: $("firstFrost").value };
+  settings = { location: gardenLocation, calendar: $("calendarRegion").value, spring: $("lastFrost").value, fall: $("firstFrost").value };
   writeJSON("gardenSettings", settings);
 }
 function chosenCrop() { return G.CROPS.find(c => c.id === $("cropPreset").value); }
@@ -54,14 +55,14 @@ function usableWeather() { return weather && Date.now() - weather.fetchedAt < 30
 
 // Populate real crop presets, while keeping room for a crop from your own seed packet.
 G.CROPS.forEach(crop => {
-  const option = el("option", crop.icon + "  " + crop.name);
+  const option = el("option", crop.name);
   option.value = crop.id;
   $("cropPreset").append(option);
 });
-const other = el("option", "✿  Another crop");
+const other = el("option", "Other crop");
 other.value = "custom";
 $("cropPreset").append(other);
-$("plantDate").value = G.today(location.timezone);
+$("plantDate").value = G.today(gardenLocation.timezone);
 $("calendarRegion").value = settings.calendar === "custom" ? "custom" : "nc";
 if (G.parseDate(settings.spring)) $("lastFrost").value = settings.spring;
 if (G.parseDate(settings.fall)) $("firstFrost").value = settings.fall;
@@ -74,7 +75,7 @@ function syncMethods(preferred) {
   $("customDays").disabled = Boolean(crop);
   $("plantMethod").replaceChildren();
   Object.keys(crop?.methods || { seed: [], transplant: [] }).forEach(method => {
-    const option = el("option", method === "seed" ? "Seeds" : "Transplants");
+    const option = el("option", method === "seed" ? "Seeds" : method === "tuber" ? "Seed potatoes" : "Transplants");
     option.value = method;
     $("plantMethod").append(option);
   });
@@ -104,7 +105,7 @@ function refreshPlanner(updateEstimate = true) {
     return;
   }
   const [low, high] = crop.methods[method];
-  $("cropGuide").append(el("strong", crop.icon + "  " + (crop.season === "warm" ? "Warm-season crop" : "Cool-season crop")), el("p", low + "–" + high + " days to harvest from " + (method === "seed" ? "sowing seeds." : "setting transplants outdoors.")));
+  $("cropGuide").append(el("strong", crop.icon + "  " + (crop.season === "warm" ? "Warm-season crop" : "Cool-season crop")), el("p", low + "–" + high + " days to harvest from " + (method === "seed" ? "sowing seeds." : method === "tuber" ? "planting seed potatoes." : "setting transplants outdoors.")));
   const year = G.parseDate(planting) ? Number(planting.slice(0, 4)) : Number(G.today().slice(0, 4));
   const windows = G.plantingWindows(crop, year, $("calendarRegion").value, $("lastFrost").value, $("firstFrost").value, method);
   if (windows.length) {
@@ -126,9 +127,9 @@ function resetPlanner() {
   $("calendarRegion").value = settings.calendar === "custom" ? "custom" : "nc";
   if (G.parseDate(settings.spring)) $("lastFrost").value = settings.spring;
   if (G.parseDate(settings.fall)) $("firstFrost").value = settings.fall;
-  $("plantDate").value = G.today(location.timezone);
-  $("planner-heading").textContent = "Plan your next planting";
-  $("saveCrop").textContent = "＋ Add to my garden";
+  $("plantDate").value = G.today(gardenLocation.timezone);
+  $("planner-heading").textContent = "Add a crop";
+  $("saveCrop").textContent = "Save crop";
   $("cancelEdit").hidden = true;
   syncMethods();
   refreshPlanner();
@@ -158,11 +159,11 @@ function renderCrops() {
   $("cropCount").textContent = crops.length;
   if (!crops.length) {
     const empty = el("div", undefined, "empty-garden");
-    empty.append(el("span", "🌱", "empty-icon"), el("h3", "Your next harvest starts here."), el("p", "Pick a crop, choose a planting date, and give it a place in your garden."), el("p", "No account needed. Just a little room to grow.", "small muted"));
+    empty.append(el("span", "🌱", "empty-icon"), el("h3", "No crops added yet"), el("p", "Choose a crop and planting date to start your log."));
     $("cropList").append(empty);
     return;
   }
-  const today = G.today(location.timezone);
+  const today = G.today(gardenLocation.timezone);
   crops.forEach((raw, index) => {
     const crop = raw && typeof raw === "object" ? raw : { name: "Saved record" };
     const preset = G.CROPS.find(c => c.id === crop.preset);
@@ -273,7 +274,7 @@ function renderWeather() {
   const [icon, description] = weatherLabel(weather.current.weather_code), d = weather.daily;
   $("weatherIcon").textContent = icon;
   $("temperature").textContent = number(weather.current.temperature_2m) + "°F";
-  $("weatherLocation").textContent = location.name;
+  $("weatherLocation").textContent = gardenLocation.name;
   $("weatherDescription").textContent = description;
   $("weatherDetail").textContent = "High " + number(d.temperature_2m_max[0]) + "° · Low " + number(d.temperature_2m_min[0]) + "°\nWind " + number(weather.current.wind_speed_10m) + " mph";
   $("forecast").replaceChildren();
@@ -291,7 +292,7 @@ function renderWeather() {
   $("alerts").replaceChildren();
   const advisories = G.advisories(weather);
   if (weather.partial) $("alerts").append(el("p", "Some forecast values are missing. Weather guidance is limited to the available data.", "muted small"));
-  if (!advisories.length && !weather.partial) $("alerts").append(el("p", "No freezing, extreme heat, heavy precipitation, or strong-wind thresholds reached in this forecast. Keep an eye on your garden.", "calm-note"));
+  if (!advisories.length && !weather.partial) $("alerts").append(el("p", "No major temperature, rain, or wind risks flagged in the next seven days.", "calm-note"));
   advisories.forEach(advice => {
     const box = el("div", undefined, "weather-advice");
     box.append(el("strong", advice.title + " · " + formatDate(advice.date)), el("p", advice.text));
@@ -299,7 +300,7 @@ function renderWeather() {
   });
 }
 async function loadWeather() {
-  const request = ++weatherVersion, requestedLocation = { ...location };
+  const request = ++weatherVersion, requestedLocation = { ...gardenLocation };
   weather = null;
   $("weatherContent").hidden = true;
   $("alerts").replaceChildren();
@@ -317,7 +318,7 @@ async function loadWeather() {
     const raw = await getJSON("https://api.open-meteo.com/v1/forecast?" + params);
     if (request !== weatherVersion) return;
     weather = G.normalizeWeather(raw);
-    if (typeof weather.timezone === "string") { location.timezone = weather.timezone; saveSettings(); }
+    if (typeof weather.timezone === "string") { gardenLocation.timezone = weather.timezone; saveSettings(); }
     renderWeather();
     const time = new Date(weather.fetchedAt).toLocaleTimeString("en-US", { timeZone: weather.timezone || undefined, hour: "numeric", minute: "2-digit" });
     $("weatherStatus").textContent = "Updated " + time + " · " + (weather.timezone || "local time") + " · Forecast begins " + formatDate(weather.daily.time[0]);
@@ -333,7 +334,7 @@ async function loadWeather() {
 }
 function chooseLocation(next) {
   locationIntent++;
-  location = next;
+  gardenLocation = next;
   $("locationResults").replaceChildren();
   // The NC calendar is regional. Never silently apply it to a distant city.
   if ($("calendarRegion").value === "nc" && !(next.latitude >= 34.5 && next.latitude <= 36.6 && next.longitude >= -81.4 && next.longitude <= -78.0)) {
@@ -375,9 +376,14 @@ $("useLocation").addEventListener("click", () => {
     if (intent !== locationIntent) return;
     const { latitude, longitude } = position.coords;
     chooseLocation({ name: "Your location (" + latitude.toFixed(2) + ", " + longitude.toFixed(2) + ")", latitude, longitude });
-  }, () => {
+  }, error => {
     $("useLocation").disabled = false;
-    if (intent === locationIntent) $("locationResults").replaceChildren(el("p", "Location access was unavailable. Search for a city instead.", "muted small"));
+    const message = error.code === 1
+      ? "Location permission is blocked. Allow location access in your browser, or search for your city above."
+      : error.code === 3
+        ? "Finding your location timed out. Try again or search for your city above."
+        : "Your location could not be found. Search for your city above.";
+    if (intent === locationIntent) $("locationResults").replaceChildren(el("p", message, "muted small"));
   }, { timeout: 10000, maximumAge: 300000, enableHighAccuracy: false });
 });
 $("refreshWeather").addEventListener("click", loadWeather);
@@ -391,7 +397,9 @@ setInterval(() => {
     weather = null;
     $("weatherContent").hidden = true;
     $("alerts").replaceChildren();
-    $("weatherStatus").textContent = "The forecast has expired. Refresh to get current weather for " + location.name + ".";
+    $("weatherStatus").textContent = "The forecast has expired. Refresh to get current weather for " + gardenLocation.name + ".";
     refreshPlanner(false);
   }
 }, 60000);
+
+})();

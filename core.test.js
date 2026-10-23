@@ -25,6 +25,16 @@ test("harvest estimates distinguish seeds from transplants", () => {
   assert.deepEqual(G.estimate(lettuce, "transplant", "2027-03-01"), { early: "2027-03-16", late: "2027-03-26", suggested: "2027-03-21" });
   assert.equal(G.estimate(tomato, "seed", "2027-03-01"), null);
 });
+test("corn, tomatoes and potatoes have distinct planting material and harvest estimates", () => {
+  const corn = G.CROPS.find(c => c.id === "corn");
+  const potato = G.CROPS.find(c => c.id === "potato");
+  assert.equal(G.CROPS.filter(c => c.id === "tomato").length, 1);
+  assert.deepEqual(G.estimate(corn, "seed", "2027-04-01"), { early: "2027-06-25", late: "2027-06-30", suggested: "2027-06-28" });
+  assert.deepEqual(G.estimate(potato, "tuber", "2027-03-01"), { early: "2027-06-04", late: "2027-06-29", suggested: "2027-06-17" });
+  assert.equal(G.estimate(potato, "seed", "2027-03-01"), null);
+  assert.deepEqual(G.plantingWindows(corn, 2027, "nc"), [["2027-03-15", "2027-05-31"]]);
+  assert.deepEqual(G.plantingWindows(potato, 2027, "nc"), [["2027-02-15", "2027-03-31"]]);
+});
 test("planting window boundaries and separate summer windows", () => {
   const advice = date => G.recommendation(tomato, "transplant", date, "nc").tone;
   for (const date of ["2027-04-14", "2027-07-15", "2027-08-15"]) assert.equal(advice(date), "caution");

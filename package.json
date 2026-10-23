@@ -1,0 +1,11 @@
+{
+  "name": "agriculture-board",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Development checks for the static AgricultureBoard website",
+  "scripts": {
+    "test": "node --test core.test.js browser.test.cjs"
+  },
+  "engines": { "node": ">=22" },
+  "devDependencies": { "jsdom": "30.1.3" }
+}
