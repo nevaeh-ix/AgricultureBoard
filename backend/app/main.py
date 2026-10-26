@@ -9,9 +9,10 @@ import httpx
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, ConfigDict, model_validator
-from sqlalchemy import Date, Float, ForeignKey, String, Text, create_engine, select
+from sqlalchemy import Date, Float, String, Text, create_engine, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 
+# Use a local SQLite file unless a database URL is provided.
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./agriculture.db")
 engine = create_engine(DATABASE_URL, pool_pre_ping=True, connect_args={"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {})
 Session = sessionmaker(engine, expire_on_commit=False)
@@ -58,9 +59,10 @@ app = FastAPI(title="AgricultureBoard API", version="1.0.0")
 origins = os.getenv("CORS_ORIGINS", "http://localhost:8000,http://127.0.0.1:8000,https://nevaeh-ix.github.io").split(",")
 app.add_middleware(CORSMiddleware, allow_origins=[o.strip() for o in origins], allow_methods=["GET", "POST", "PUT", "DELETE"], allow_headers=["Content-Type"])
 
+# Match the field names the browser already uses for saved crops.
 def to_output(row):
     return CropOut(id=row.id, name=row.name, preset=row.preset, method=row.method,
-                   plantDate=row.plant_date, harvestDate=row.harvest_date, yield=row.yield_amount,
+                   plantDate=row.plant_date, harvestDate=row.harvest_date, yield_amount=row.yield_amount,
                    notes=row.notes, customDays=row.custom_days)
 
 def apply_values(row, crop):
@@ -95,6 +97,7 @@ def create_crop(garden_id: UUID, crop: CropIn):
 def update_crop(garden_id: UUID, crop_id: UUID, crop: CropIn):
     with Session.begin() as db:
         row = db.get(CropRow, str(crop_id))
+        # Check the garden too, so a crop ID cannot update another garden.
         if row is None or row.garden_id != str(garden_id):
             raise HTTPException(404, "Crop not found")
         apply_values(row, crop)
@@ -111,7 +114,7 @@ def delete_crop(garden_id: UUID, crop_id: UUID):
 
 @app.put("/api/gardens/{garden_id}/crops", response_model=list[CropOut])
 def replace_crops(garden_id: UUID, crops: list[CropIn] = []):
-    """Atomic replacement used to migrate and sync the original localStorage interface."""
+    """Replace the garden in one transaction so a failed save can be rolled back."""
     if len(crops) > 200:
         raise HTTPException(413, "Maximum 200 crops per garden")
     with Session.begin() as db:
@@ -147,7 +150,7 @@ WEATHER_TTL = 600
 
 @app.get("/api/weather")
 async def weather(latitude: float = Query(ge=-90, le=90), longitude: float = Query(ge=-180, le=180)):
-    # Rounded location keys avoid duplicate upstream requests from nearby coordinates.
+    # Nearby coordinates can share the same forecast for ten minutes.
     key = (round(latitude, 3), round(longitude, 3))
     now = time.monotonic()
     with _weather_lock:
@@ -166,6 +169,7 @@ async def weather(latitude: float = Query(ge=-90, le=90), longitude: float = Que
             data = response.json()
     except (httpx.HTTPError, ValueError):
         raise HTTPException(503, "Weather provider unavailable")
+    # Drop expired forecasts when the cache grows.
     with _weather_lock:
         _weather_cache[key] = (time.monotonic() + WEATHER_TTL, data)
         if len(_weather_cache) > 500:
@@ -173,3 +177,4 @@ async def weather(latitude: float = Query(ge=-90, le=90), longitude: float = Que
                 if _weather_cache[old][0] <= time.monotonic():
                     del _weather_cache[old]
     return data
+

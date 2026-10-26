@@ -3,6 +3,7 @@
 
 const $ = id => document.getElementById(id);
 const G = window.Garden;
+// Use textContent so saved notes show up as text, even if they contain HTML.
 function el(tag, text, className) {
   const node = document.createElement(tag);
   if (text !== undefined) node.textContent = text;
@@ -31,6 +32,7 @@ function writeJSON(key, data) {
 
 let crops = [], settings = {}, editing = null, weather = null, weatherVersion = 0, locationIntent = 0;
 let storageProtected = false;
+// Leave the API URL empty to save crops in the browser on GitHub Pages.
 const apiBase = (localStorage.getItem("agricultureApiUrl") || "").trim().replace(/\/$/, "");
 let remoteReady = false;
 let remoteGarden = null;
@@ -51,7 +53,7 @@ async function apiRequest(path, options = {}) {
 }
 function syncCrops() {
   if (!remoteReady) return;
-  // Serialize snapshots to avoid overlapping saves overwriting newer changes.
+  // Send saves one at a time so an older request cannot finish after a newer one.
   pendingSave = pendingSave.then(async () => {
     await apiRequest("/api/gardens/" + remoteGarden + "/crops", {
       method: "PUT", body: JSON.stringify(crops.map(c => ({
@@ -69,6 +71,7 @@ async function connectBackend() {
   if (!apiBase || !remoteGarden || storageProtected) return;
   try {
     const remote = await apiRequest("/api/gardens/" + remoteGarden + "/crops");
+    // Bring local crops over only when the backend garden is empty.
     if (crops.length && !remote.length) {
       remoteReady = true;
       syncCrops();
@@ -91,7 +94,7 @@ try {
   if (!Array.isArray(saved)) throw new Error("Invalid saved records");
   crops = saved;
 } catch {
-  // Never overwrite unreadable original records.
+  // Keep the original saved data if it cannot be read.
   storageProtected = true;
   $("storageStatus").textContent = "Saved records could not be read. New records will stay in this tab; your original saved data will not be overwritten.";
 }
@@ -106,9 +109,10 @@ function saveSettings() {
   writeJSON("gardenSettings", settings);
 }
 function chosenCrop() { return G.CROPS.find(c => c.id === $("cropPreset").value); }
+// Only use forecasts loaded within the last 30 minutes for planting advice.
 function usableWeather() { return weather && Date.now() - weather.fetchedAt < 30 * 60 * 1000 ? weather : null; }
 
-// Populate real crop presets, while keeping room for a crop from your own seed packet.
+// Add the preset crops, plus an option for anything else you want to grow.
 G.CROPS.forEach(crop => {
   const option = el("option", crop.name);
   option.value = crop.id;
@@ -149,6 +153,7 @@ function refreshPlanner(updateEstimate = true) {
   $("harvestDate").setCustomValidity("");
   const crop = chosenCrop(), planting = $("plantDate").value, method = $("plantMethod").value;
   const estimate = getEstimate();
+  // A weather refresh should keep the harvest date already set for this planting.
   if (updateEstimate) $("harvestDate").value = estimate?.suggested || $("plantDate").value;
   
   $("cropGuide").replaceChildren();
@@ -280,6 +285,7 @@ $("cropForm").addEventListener("submit", event => {
     yield: $("yieldAmount").value, notes: $("cropNotes").value.trim(),
     customDays: preset ? null : Number($("customDays").value) || null
   };
+  // Editing replaces the existing crop instead of adding it a second time.
   const wasEditing = editing !== null;
   if (wasEditing) crops[editing] = record;
   else crops.push(record);
@@ -289,7 +295,7 @@ $("cropForm").addEventListener("submit", event => {
   $("formStatus").textContent = wasEditing ? "Planting updated." : "Added to your garden.";
 });
 
-// The public Open-Meteo endpoints need no API key for this noncommercial app.
+// Stop slow weather or location requests after 15 seconds so they can be retried.
 async function getJSON(url) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 15000);
@@ -346,6 +352,7 @@ function renderWeather() {
   });
 }
 async function loadWeather() {
+  // Ignore older responses if the location changes while weather is loading.
   const request = ++weatherVersion, requestedLocation = { ...gardenLocation };
   weather = null;
   $("weatherContent").hidden = true;
@@ -368,6 +375,7 @@ async function loadWeather() {
           latitude: requestedLocation.latitude, longitude: requestedLocation.longitude
         }));
       } catch {
+        // Get weather directly if the backend is unavailable.
         raw = await getJSON("https://api.open-meteo.com/v1/forecast?" + params);
       }
     } else raw = await getJSON("https://api.open-meteo.com/v1/forecast?" + params);
@@ -391,7 +399,7 @@ function chooseLocation(next) {
   locationIntent++;
   gardenLocation = next;
   $("locationResults").replaceChildren();
-  // The NC calendar is regional. Never silently apply it to a distant city.
+  // Switch to local frost dates when the new city is outside central NC.
   if ($("calendarRegion").value === "nc" && !(next.latitude >= 34.5 && next.latitude <= 36.6 && next.longitude >= -81.4 && next.longitude <= -78.0)) {
     $("calendarRegion").value = "custom";
     $("regionNote").textContent = "New location selected. Add local frost dates to get a general planting window for this garden.";
@@ -447,7 +455,7 @@ refreshPlanner();
 renderCrops();
 connectBackend();
 loadWeather();
-// Expired forecasts never continue to drive planting advice.
+// Clear old weather so planting advice does not keep using an expired forecast.
 setInterval(() => {
   if (weather && !usableWeather()) {
     weather = null;
@@ -459,3 +467,4 @@ setInterval(() => {
 }, 60000);
 
 })();
+

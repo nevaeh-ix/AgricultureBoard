@@ -1,7 +1,8 @@
 /* Crop ranges and calendar: NC State Extension, Central NC calendar.
-   Weather thresholds are app heuristics, not official weather warnings. */
+   Weather tips use simple app rules, not official weather warnings. */
 (function (root) {
   "use strict";
+  // Each method has a minimum and maximum number of days until harvest.
   const CROPS = [
     { id: "tomato", name: "Tomatoes", icon: "🍅", season: "warm", methods: { transplant: [75, 85] }, windows: [["04-15", "07-14"], ["08-01", "08-14"]] },
     { id: "corn", name: "Corn (sweet)", icon: "🌽", season: "warm", methods: { seed: [85, 90] }, windows: [["03-15", "05-31"]] },
@@ -16,7 +17,7 @@
     { id: "radish", name: "Radishes", icon: "🌱", season: "cool", methods: { seed: [20, 25] }, windows: [["02-01", "06-30"], ["08-01", "09-14"]] },
     { id: "beet", name: "Beets", icon: "🌱", season: "cool", methods: { seed: [55, 60] }, windows: [["03-01", "04-14"], ["07-15", "09-14"]] }
   ];
-  // UTC calendar arithmetic avoids shifted dates around daylight saving time.
+  // Use UTC so daylight saving changes do not shift a planting date.
   function parseDate(value) {
     if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
     const date = new Date(value + "T00:00:00Z");
@@ -35,6 +36,7 @@
     try { return new Intl.DateTimeFormat("en-CA", { timeZone: timezone || undefined, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date()); }
     catch { return today(); }
   }
+  // Use the middle of the harvest range as the suggested date.
   function estimate(crop, method, planted) {
     const range = crop?.methods[method];
     return range && parseDate(planted) ? { early: addDays(planted, range[0]), late: addDays(planted, range[1]), suggested: addDays(planted, Math.round((range[0] + range[1]) / 2)) } : null;
@@ -44,7 +46,7 @@
     if (!parseDate(spring) || !parseDate(fall) || spring >= fall || spring.slice(0, 4) !== String(year) || fall.slice(0, 4) !== String(year)) return [];
     const maturity = crop.methods[method]?.[1];
     if (!maturity) return [];
-    // General frost-relative planning, separate from the sourced regional calendar.
+    // Outside central NC, estimate planting windows from the entered frost dates.
     const ranges = crop.season === "warm"
       ? [[addDays(spring, 14), addDays(fall, -maturity - 14)]]
       : [[addDays(spring, -28), addDays(spring, 14)], [addDays(fall, -maturity - 21), addDays(fall, -maturity)]];
@@ -54,7 +56,7 @@
     const windows = plantingWindows(crop, Number(planted?.slice(0, 4)), calendar, spring, fall, method);
     if (!parseDate(planted)) return { tone: "neutral", title: "Choose a planting date", text: "See how it fits your planting calendar." };
     if (!windows.length) return { tone: "neutral", title: "Add your local frost dates", text: "Enter a last spring frost and first fall frost in the planting year to calculate a general window." };
-    // Outside-window dates are allowed without showing a warning.
+    // Keep dates outside the planting window allowed; still check available weather.
     const forecastDay = weather?.daily.time.indexOf(planted) ?? -1;
     if (forecastDay >= 0) {
       const d = weather.daily;
@@ -67,6 +69,7 @@
     }
     return { tone: "good", title: "Within the suggested planting window", text: forecastDay >= 0 ? "Check soil warmth and moisture before planting. A short forecast cannot rule out frost later in the season." : "This is calendar guidance; the selected date is outside the loaded weather forecast." };
   }
+  // Check the forecast shape before the page tries to display it.
   function normalizeWeather(raw) {
     const keys = ["temperature_2m_max", "temperature_2m_min", "precipitation_sum", "weather_code", "wind_speed_10m_max"];
     const d = raw?.daily, c = raw?.current;
@@ -77,6 +80,7 @@
   function advisories(weather) {
     const d = weather.daily, result = [];
     function notice(test, values, title, text) {
+      // Show the first day that meets each weather rule.
       const i = values.findIndex(v => Number.isFinite(v) && test(v));
       if (i >= 0) result.push({ date: d.time[i], title, text });
     }
@@ -86,7 +90,9 @@
     if (Array.isArray(d.wind_speed_10m_max)) notice(w => w >= 20, d.wind_speed_10m_max, "Windy conditions", "Secure supports and protect young transplants.");
     return result;
   }
+  // Share the same helpers with the website and the Node tests.
   const api = { CROPS, parseDate, addDays, daysBetween, today, estimate, plantingWindows, recommendation, normalizeWeather, advisories };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.Garden = api;
 })(typeof window !== "undefined" ? window : globalThis);
+

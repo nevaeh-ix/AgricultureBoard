@@ -1,4 +1,5 @@
 
+/* Colors shared across the page. */
 :root{--ink:#25352b;--muted:#627169;--rose:#356747;--rose-dark:#254b34;--pink:#e8f0e6;--line:#d9e4d7;--green:#356747;--paper:#f7f8f2}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -44,6 +45,7 @@ h3{font-size:17px;font-weight:600}
 .location-results{display:flex;flex-wrap:wrap;gap:8px}
 .location-result{background:var(--pink);color:var(--rose);font-size:12px;text-align:left}
 .location-result:hover{background:#d7e7d4}
+/* Weather summary, forecast, and garden tips. */
 .weather-card{margin-bottom:34px}
 .weather-card h2{font-size:26px}
 .muted{color:var(--muted)}
@@ -68,6 +70,7 @@ h3{font-size:17px;font-weight:600}
 .weather-advice p{margin:4px 0 0}
 .calm-note{font-size:12px;color:var(--green);margin:0}
 .source{font-size:11px;color:var(--muted);margin:10px 0 0}
+/* Keep the planner and saved crops side by side on larger screens. */
 .workspace{display:grid;grid-template-columns:1fr 1.13fr;gap:34px;align-items:start}
 .planner-card{padding:28px}
 .planner-card h2{margin-bottom:23px}
@@ -132,7 +135,7 @@ footer p{margin:0}
 .source-note{padding:18px 4px;gap:12px}footer{flex-wrap:wrap;justify-content:space-between;gap:10px 20px}.empty-garden{padding:30px 24px}.form-row{gap:10px}input,select,textarea{font-size:16px}
 }
 
-/* Reflow date fields and keep forecasts readable on phones. */
+/* Stack fields and let the forecast scroll on smaller screens. */
 .workspace > *, .form-row > *, .weather-now > div, .crop-identity, .inline > * { min-width: 0; }
 input, select, textarea { max-width: 100%; }
 @media (max-width: 700px) {
@@ -175,4 +178,5 @@ input, select, textarea { max-width: 100%; }
   input, select, textarea { font-size: 16px; }
   button, .button { min-height: 44px; }
 }
+
 
