@@ -35,10 +35,14 @@ test("corn, tomatoes and potatoes have distinct planting material and harvest es
   assert.deepEqual(G.plantingWindows(corn, 2027, "nc"), [["2027-03-15", "2027-05-31"]]);
   assert.deepEqual(G.plantingWindows(potato, 2027, "nc"), [["2027-02-15", "2027-03-31"]]);
 });
-test("planting window boundaries and separate summer windows", () => {
-  const advice = date => G.recommendation(tomato, "transplant", date, "nc").tone;
-  for (const date of ["2027-04-14", "2027-07-15", "2027-08-15"]) assert.equal(advice(date), "caution");
-  for (const date of ["2027-04-15", "2027-07-14", "2027-08-01"]) assert.equal(advice(date), "good");
+test("tomato windows stay separate and dates outside them remain allowed", () => {
+  assert.deepEqual(G.plantingWindows(tomato, 2027, "nc"), [
+    ["2027-04-15", "2027-07-14"], ["2027-08-01", "2027-08-14"]
+  ]);
+  // The removed calendar warning should stay removed; weather checks still apply.
+  for (const date of ["2027-04-14", "2027-04-15", "2027-07-14", "2027-07-15", "2027-08-01", "2027-08-14", "2027-08-15"]) {
+    assert.equal(G.recommendation(tomato, "transplant", date, "nc").tone, "good");
+  }
 });
 test("custom frost dates must be ordered in the planting year", () => {
   const windows = (spring, fall) => G.plantingWindows(tomato, 2027, "custom", spring, fall, "transplant");
@@ -85,3 +89,4 @@ test("advisories use the actual threshold day", () => {
   raw.daily.precipitation_sum[0] = 1; raw.daily.wind_speed_10m_max[1] = 20;
   assert.deepEqual(G.advisories(G.normalizeWeather(raw)).map(n => n.date), ["2027-05-02", "2027-05-03", "2027-05-01", "2027-05-02"]);
 });
+

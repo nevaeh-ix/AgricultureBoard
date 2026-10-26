@@ -7,6 +7,7 @@
   <meta name="description" content="Plan your garden with live local weather, crop planting guidance, and a harvest tracker.">
   <title>AgricultureBoard · Nevaeh's garden planner</title>
   <link rel="stylesheet" href="style.css?v=mobile-1">
+  <!-- Load the date and crop helpers before the page controls. -->
   <script defer src="core.js?v=2"></script>
   <script defer src="script.js?v=2"></script>
 </head>
@@ -17,6 +18,7 @@
     <div><h1>My Agriculture Board</h1><p class="intro">Keep track of your crops, check the weather, and plan when to plant.</p></div><a class="button" href="#planner">Add a crop</a>
   </header>
   <main id="main" class="wrap">
+    <!-- Location search and the forecast share the selected garden location. -->
     <section class="card weather-card" aria-labelledby="weather-heading">
       <div class="section-top"><h2 id="weather-heading">Local weather</h2><button id="refreshWeather" class="quiet" type="button">Refresh weather</button></div>
       <form id="locationForm" class="location-form"><label for="locationSearch">Find a city or postal code</label><div class="inline"><input id="locationSearch" type="search" placeholder="e.g. Greensboro, NC" minlength="2" maxlength="100" required><button id="searchButton" type="submit">Search</button><button id="useLocation" class="secondary" type="button">Use my location</button></div></form>
@@ -27,6 +29,7 @@
       <p class="source">Forecast data: <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a>. Garden advisories are simple forecast-based tips, not official weather warnings.</p>
     </section>
     <div class="workspace">
+      <!-- This form handles both adding a crop and editing a saved one. -->
       <section id="planner" class="card planner-card" aria-labelledby="planner-heading">
         <h2 id="planner-heading">Add a crop</h2>
         <form id="cropForm">
@@ -49,4 +52,5 @@
   <footer class="wrap"><p>Created by Nevaeh George</p><a href="https://github.com/nevaeh-ix/AgricultureBoard" target="_blank" rel="noopener noreferrer">View code</a></footer>
 </body>
 </html>
+
 
